@@ -139,12 +139,12 @@ void Task_secuencia(void){
 }
 
 void parpadeo(void){ //coche rojo activo y peaton verde parpadea
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < 3; i++)
       {
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
-      HAL_Delay(1000);
+      HAL_Delay(500);
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_SET);
-      HAL_Delay(1000);
+      HAL_Delay(500);
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
       }
 }
