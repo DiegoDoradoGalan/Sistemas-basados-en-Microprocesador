@@ -55,7 +55,6 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int botonPulsado=0;
 /* USER CODE END 0 */
 
 /**
@@ -97,9 +96,21 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-    if(HAL_GPIO_ReadPin(boton_GPIO_Port,boton_Pin) | botonPulsado==1){
-      botonPulsado = 1;
-      Task_secuencia();
+    if(HAL_GPIO_ReadPin(boton_GPIO_Port,boton_Pin)){
+
+      //Estado inicial(ST_Inicial)
+      GPIOA -> ODR = GPIO_ODR_OD5_Msk | GPIO_ODR_OD10_Msk; //coche verde y peaton rojo activos
+      HAL_Delay(3000);
+      //Estado amarillo(ST_CAmarillo)
+      GPIOA->ODR = GPIO_ODR_OD6_Msk | GPIO_ODR_OD10_Msk; //Coche amarillo y peaton rojo activos
+      HAL_Delay(3000);
+      //Estado peatón verde(ST_PVerde)
+      GPIOA->ODR = GPIO_ODR_OD7_Msk; //Coche rojo activo
+      GPIOB -> ODR = GPIO_ODR_OD5_Msk; //Peaton verde activo
+      HAL_Delay(5000);
+      //Estado parpadeo verde(ST_Parpadeo)
+      task_parpadeo();
+
     }else{
       GPIOA->ODR = 0X8000420;
     }
@@ -108,37 +119,7 @@ int main(void)
   /* USER CODE END 3 */
 }
 
-void Task_secuencia(void){
-  static enum {ST_Inicial, ST_CAmarillo, ST_PVerde, ST_PARPADEO} next_state = ST_Inicial;
-  switch (next_state)
-  {
-  case ST_Inicial:
-
-    GPIOA -> ODR = GPIO_ODR_OD5_Msk | GPIO_ODR_OD10_Msk; //coche verde y peaton rojo activos
-    HAL_Delay(3000);
-    next_state=ST_CAmarillo;
-    break;
-  case ST_CAmarillo:
-    
-    GPIOA->ODR = GPIO_ODR_OD6_Msk | GPIO_ODR_OD10_Msk; //COCHE amarillo y peaton rojo activos
-    HAL_Delay(3000);
-    next_state=ST_PVerde;
-    break;
-  case ST_PVerde:
-    GPIOA->ODR = GPIO_ODR_OD7_Msk; //Coche rojo activo
-    GPIOB -> ODR = GPIO_ODR_OD5_Msk; //Peaton verde activo
-    HAL_Delay(5000);
-    next_state = ST_PARPADEO;
-    break;
-  case ST_PARPADEO:
-    parpadeo();
-    next_state = ST_Inicial;
-    botonPulsado=0;
-  
-  }
-}
-
-void parpadeo(void){ //coche rojo activo y peaton verde parpadea
+void task_parpadeo(void){ //coche rojo activo y peaton verde parpadea
     for (size_t i = 0; i < 3; i++)
       {
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
