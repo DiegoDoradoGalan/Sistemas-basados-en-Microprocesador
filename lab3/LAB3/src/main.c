@@ -34,8 +34,11 @@
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
+
 /* USER CODE BEGIN PM */
 
+//Declaramos los posibles estados del programa
+static enum {ST_Inicial, ST_CAmarillo, ST_PVerde, ST_PARPADEO} next_state = 0;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -49,8 +52,12 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
+
 /* USER CODE BEGIN PFP */
 
+//Declaramos las dos funciones con las que contará el programa
+void secuencia(int new_state);
+void task_parpadeo(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -97,9 +104,48 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+    secuencia(next_state);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+}
+
+void secuencia(int new_state){
+
+  switch (new_state)
+  {
+  case ST_Inicial:
+    GPIOA -> ODR = GPIO_ODR_OD5_Msk | GPIO_ODR_OD10_Msk; //coche verde y peaton rojo activos
+    break;
+  case ST_CAmarillo:
+    HAL_Delay(3000); //Esperamos los 3 segundos que dura el estado inicial
+    GPIOA->ODR = GPIO_ODR_OD6_Msk | GPIO_ODR_OD10_Msk; //Coche amarillo y peaton rojo activos
+    HAL_Delay(3000);
+    next_state=ST_PVerde;
+    break;
+  case ST_PVerde:
+    GPIOA->ODR = GPIO_ODR_OD7_Msk; //Coche rojo activo
+    GPIOB -> ODR = GPIO_ODR_OD5_Msk; //Peaton verde activo
+    HAL_Delay(5000);
+    next_state=ST_PARPADEO;
+    break;
+  case ST_PARPADEO:
+    task_parpadeo();
+    next_state= ST_Inicial;
+    break;
+  }
+}
+
+void task_parpadeo(void){ //coche rojo activo y peaton verde parpadea
+    for (size_t i = 0; i < 3; i++)
+    {
+      HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
+      HAL_Delay(500);
+      HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_SET);
+      HAL_Delay(500);
+      HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
+    }
 }
 
 /**
@@ -215,7 +261,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : boton_Pin */
   GPIO_InitStruct.Pin = boton_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(boton_GPIO_Port, &GPIO_InitStruct);
 
@@ -233,7 +279,14 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if (GPIO_Pin == boton_Pin) 
+  {
+    next_state = ST_CAmarillo; //El siguiente estado del programa será ST_CAmarillo(1)
+  }
+  
+}
 /* USER CODE END 4 */
 
 /**
