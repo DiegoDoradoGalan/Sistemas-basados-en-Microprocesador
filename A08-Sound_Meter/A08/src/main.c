@@ -96,6 +96,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+
   HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
   /* USER CODE END 2 */
 
@@ -120,7 +121,7 @@ int main(void)
 void MostrarNivel(uint32_t nivel){
   if (nivel>=0)
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port,LD2_Pin,1);
+    HAL_GPIO_WritePin(verde_GPIO_Port,verde_Pin,1);
     htim2.Instance->CCR1=600;
 
   }
@@ -177,6 +178,7 @@ int _write(int file,char *ptr, int len)
   }
   return len;
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -379,10 +381,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LD2_Pin|amarillo_Pin|rojo_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, verde_Pin|amarillo_Pin|rojo_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, verde_Pin|blanco_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(blanco_GPIO_Port, blanco_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(azul_GPIO_Port, azul_Pin, GPIO_PIN_RESET);
@@ -393,19 +395,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD2_Pin amarillo_Pin rojo_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin|amarillo_Pin|rojo_Pin;
+  /*Configure GPIO pins : verde_Pin amarillo_Pin rojo_Pin */
+  GPIO_InitStruct.Pin = verde_Pin|amarillo_Pin|rojo_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : verde_Pin blanco_Pin */
-  GPIO_InitStruct.Pin = verde_Pin|blanco_Pin;
+  /*Configure GPIO pin : blanco_Pin */
+  GPIO_InitStruct.Pin = blanco_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(blanco_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : azul_Pin */
   GPIO_InitStruct.Pin = azul_Pin;

@@ -65,14 +65,12 @@ void Error_Handler(void);
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
+#define verde_Pin GPIO_PIN_5
+#define verde_GPIO_Port GPIOA
 #define amarillo_Pin GPIO_PIN_6
 #define amarillo_GPIO_Port GPIOA
 #define rojo_Pin GPIO_PIN_7
 #define rojo_GPIO_Port GPIOA
-#define verde_Pin GPIO_PIN_5
-#define verde_GPIO_Port GPIOC
 #define blanco_Pin GPIO_PIN_7
 #define blanco_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
