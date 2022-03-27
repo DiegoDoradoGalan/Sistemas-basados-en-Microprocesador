@@ -109,7 +109,7 @@ int main(void)
     HAL_ADC_PollForConversion(&hadc1, 100);
     uint32_t nivel = HAL_ADC_GetValue(&hadc1);
     printf("Value: %d\r\n",nivel);
-    htim2.Instance->CCR1=500;
+    
     MostrarNivel(nivel);
     HAL_Delay(1000);
     reiniciarLeds();
@@ -146,7 +146,7 @@ void MostrarNivel(uint32_t nivel){
   if (nivel>=2001 )
   {
     HAL_GPIO_WritePin(blanco_GPIO_Port,blanco_Pin,1);
-    htim2.Instance->CCR1=2300;
+    htim2.Instance->CCR1=2500;
 
   }
 
@@ -293,7 +293,7 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 80;
+  htim2.Init.Prescaler = 72;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 20000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
