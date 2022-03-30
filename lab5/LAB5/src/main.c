@@ -151,7 +151,7 @@ void secuencia(int new_state){
     {
       htim2.Instance->CCR1=0;
       HAL_Delay(500);
-      htim2.Instance->CCR1=255;
+      htim2.Instance->CCR1=50;
       HAL_Delay(500);
     }
     
@@ -171,7 +171,7 @@ void task_parpadeo(void){ //coche rojo activo y peaton verde parpadea
       htim2.Instance->CCR1= 0;
       HAL_Delay(250);
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_SET);
-      htim2.Instance->CCR1= 1000;
+      htim2.Instance->CCR1= 200;
       HAL_Delay(250);
       HAL_GPIO_WritePin(Pverde_GPIO_Port,Pverde_Pin,GPIO_PIN_RESET);
     }
