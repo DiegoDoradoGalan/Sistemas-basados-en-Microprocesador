@@ -75,12 +75,6 @@ void loop() {
 
   lightValue=(lightValue*100)/4095;
 
-  Serial.print("Temperature Value = ");
-  Serial.print(temperature);
-  Serial.print(" LIGHT percentage(%) = ");
-  Serial.println(lightValue);
-  delay(500);
-
   char chtemp[8];
   dtostrf(temperature,4,2,chtemp);
 
@@ -93,5 +87,7 @@ void loop() {
   strcat(message, chlight);
 
   client.publish(TOPIC,message);
+  
+  delay(500);
   
 }
