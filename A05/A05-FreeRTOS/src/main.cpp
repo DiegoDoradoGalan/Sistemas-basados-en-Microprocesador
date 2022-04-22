@@ -192,7 +192,7 @@ void setup() {
 //método utilizado para la creacion de las tareas y las colas
 void app_main(){
 
-  //Creamos las colas con una capacidad máxima de 5
+  //Creamos las colas con una capacidad máxima de 1
   xQueueLight = xQueueCreate( 1, sizeof( int ) );
   xQueueTemp = xQueueCreate( 1, sizeof( float ) );
 
